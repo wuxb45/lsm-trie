@@ -1,0 +1,13 @@
+/dev/sdb
+0
+/dev/sdc
+0
+/dev/sdd
+0
+$  --end-of-dev
+2  --bloom-container
+0  --l-0
+0  --l-1
+1  --l-2
+1  --l-3
+2  --l-4

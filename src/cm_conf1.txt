@@ -1,0 +1,9 @@
+/dev/sdb
+0  --auto-detect the device capacity
+$  --end-of-dev
+0  --bloom-container
+0  --l-0
+0  --l-1
+0  --l-2
+0  --l-3
+0  --l-4
