@@ -1,17 +1,17 @@
 # Build
 
-You need:
+Compiler:
 
-> clang or gcc (set it in Makefile).
+> clang or gcc (change it in Makefile).
 
 > openssl for SHA1 function.
 
-To build:
+Build:
 
 > $ make all
 
 # Run
-Get the help information to run the get/set tests:
+Get help information of the get/set tests:
 
 > $ ./mixed_test -h
 
@@ -21,38 +21,39 @@ Get the help information to run the read performance with different store sizes.
 
 # storage space configuration
 
-You may need to change the cm_conf1.txt to set the correct storage devices (or the file indicated by '-c' option).
+You may need to change the cm_conf1.txt to set the correct storage devices (or the file specified with '-c' option).
 
-It is a naive and ugly configuration format.
-Start from the beginning, each two lines indicate a storage device.
-It could be either a raw block device (e.g., /dev/sdb), or a regular file in your file system.
-If it's a block device, than the second line would be set to '0'. It means the capacity of the device would be automatically detected.
+At the beginning of the file, every two lines describe a storage device.
+It could be a raw block device (e.g., /dev/sdb), or a regular file in your file system.
+If it's a block device, than the second line would be set to '0', which means the capacity of the device should be automatically detected.
+Make sure you have permission to use raw block devices (being the root user or being added to the disk group).
 
     /dev/sdb  -- block device
     0         -- auto-detect capacity
 
-Otherwise, you may give the number of GBs you want for the file.
+Otherwise, for regular files you should specify the file size, in the unit of GBs.
 
     /root/bigfile -- a regular file
     100           -- allocate 100GB for this file
 
-In this way, add as many as devices/files as you want. After this, a '$' at the new line marks the end of this section.
+In this way, you can add a mix of multiple devices/files.
+After declaring all the storage options, add a '$' at the next line to mark the end of the storage section.
 
-After the '$' line, you need to give the mapping information from which level to which storage. number is used to reference the storage starting from '0'. The first line indicates the device used by bloom-container. The rest five lines indicates the mapping from level-0 to level-4. For example:
+After the '$' line, you need to give the mapping information from level ID to storage ID, both starting from 0.
+The first line specifies the device ID used by bloom-container.
+The rest five lines specify the mapping from Level 0 to Level 4. For example:
 
-    /dev/sdb
+    /dev/sdb  -- Storage 0
     0
-    /dev/sdc
+    /dev/sdc  -- Storage 1
     0
     $
-    0
-    0
-    0
-    1
-    1
-    1
-
-In this example, we use two block devices, sdb and sdc. sdb is assigned to bloom-container/level-0/level-1. sdc is assigned to level-2 to level-4.
+    0         -- Bloom Containers use sdb
+    0         -- Level 0 is on sdb
+    0         -- Level 1 is on sdb
+    1         -- Level 2 is on sdc
+    1         -- Level 3 is on sdc
+    1         -- Level 4 is on sdc
 
 A simplest configuration would be putting everything on one device. It looks like this:
 
@@ -65,3 +66,16 @@ A simplest configuration would be putting everything on one device. It looks lik
     0
     0
     0
+
+Or similarly using a file:
+
+    mybigfile
+    100
+    $
+    0
+    0
+    0
+    0
+    0
+    0
+
