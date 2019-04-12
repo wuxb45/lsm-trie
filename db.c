@@ -489,6 +489,7 @@ db_dump_meta(struct DB * const db)
     const int ru = unlink(path_sym);
     assert(ru == 0);
   }
+  sprintf(path_meta, "./%s/%s-%018.6lf", DB_META_BACKUP_DIR, DB_META_MAIN, sec0);
   const int rsm = symlink(path_meta, path_sym);
   assert(rsm == 0);
 
@@ -503,6 +504,7 @@ db_dump_meta(struct DB * const db)
       const int ru = unlink(path_sym);
       assert(ru == 0);
     }
+    sprintf(path_cm_dump, "./%s/%s-%01d-%018.6lf", DB_META_BACKUP_DIR, DB_META_CMAP_PREFIX, i, sec0);
     const int rs = symlink(path_cm_dump, path_sym);
     assert(rs == 0);
   }

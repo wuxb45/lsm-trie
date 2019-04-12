@@ -31,7 +31,7 @@
 #include "table.h"
 
 #define BARREL_CAP ((BARREL_ALIGN - sizeof(struct MetaIndex)))
-#define TABLE_VOLUME_PERCENT ((0.95))
+#define TABLE_VOLUME_PERCENT ((0.95))  // reduce this for large values
 #define METAINDEX_PERCENT ((0.99))
 #define METAINDEX_MAX_NR ((UINT64_C(2048)))
 
