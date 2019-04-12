@@ -291,7 +291,7 @@ main(int argc, char ** argv)
           "a:" // nr_threads (user threads)
           "w:" // p_writers 0 to 100
           "t:" // seconds for each round
-          "n:" // nr_report: report stats every # operations
+          "n:" // nr_report: report stats every 100n operations
           "r:" // range of gen
           "d:" // meta dir: either load existing db or create new db
           "c:" // cm_conf_fn: the stroage config file
