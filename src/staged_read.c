@@ -227,8 +227,8 @@ main(int argc, char ** argv)
           "v:" // constant value size
           "d:" // meta_dir
           "c:" // cm_conf
-          "a:" // nr_threads
-          "n:" // nr_cycle
+          "a:" // nr_threads (user threads)
+          "n:" // nr_cycle: #keys to insert before each read phase
           "h"  // help
           "l"  // list pre-defined params
           )) != -1) {

@@ -284,17 +284,17 @@ main(int argc, char ** argv)
   printf("!Mixed Test: Compiled at %s %s\n", __DATE__, __TIME__);
   int opt;
   // default opts
-  struct DBParams ps = pstable[0];
+  struct DBParams ps = pstable[0]; // see default operations above
   while ((opt = getopt(argc, argv,
-          "x:" // test case id
+          "x:" // test case id (any number you like)
           "v:" // constant value size
-          "a:" // nr_threads
-          "w:" // p_writers
-          "t:" // seconds
-          "n:" // nr_report
+          "a:" // nr_threads (user threads)
+          "w:" // p_writers 0 to 100
+          "t:" // seconds for each round
+          "n:" // nr_report: report stats every # operations
           "r:" // range of gen
-          "d:" // meta dir
-          "c:" // cm_conf_fn
+          "d:" // meta dir: either load existing db or create new db
+          "c:" // cm_conf_fn: the stroage config file
           "g:" // generator c,e,z,x,u
           "h"  // help
           "l"  // list pre-defined params
