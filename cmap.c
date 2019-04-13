@@ -170,7 +170,7 @@ containermap_show(struct ContainerMap * const cm)
     const uint8_t byte = cm->bits[i >> 3];
     const uint8_t bit = byte & (1u << (i & 7u));
     // line header
-    if (i % 64u == 0) sprintf(line, "%08" PRIu64 ":|", i);
+    if (i % 64u == 0) sprintf(line, "%08lu:|", i);
     line[10 + (i % 64u)] = (bit == 0) ? ' ':'*';
     if (bit != 0) ucount++;
     // line end
@@ -189,7 +189,7 @@ containermap_show(struct ContainerMap * const cm)
     printf("%s|\n", line);
   }
   printf("   END   \\%s%s/\n", XX, XX);
-  printf("Container usage: (%" PRIu64 "/%" PRIu64 ", %.2lf%%)\n",
+  printf("Container usage: (%lu/%lu, %.2lf%%)\n",
       ucount, cm->nr_units, ((double)ucount)/((double)cm->nr_units)*100.0);
   pthread_mutex_unlock(&(cm->mutex_cm));
   fflush(stdout);

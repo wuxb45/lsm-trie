@@ -156,7 +156,7 @@ struct Compaction {
   static void
 db_generate_meta_fn(struct DB * const db, const uint64_t mtid, char * const path)
 {
-  sprintf(path, "%s/%02" PRIx64 "/%016" PRIx64, db->persist_dir, mtid % 256, mtid);
+  sprintf(path, "%s/%02lx/%016lx", db->persist_dir, mtid % 256, mtid);
 }
 
   static struct MetaTable *
@@ -337,7 +337,7 @@ recursive_dump(struct VirtualContainer * const vc, FILE * const out)
 {
   // only the metatable's id is dumpped :)
   if (vc) {
-    fprintf(out, "[ %" PRIu64 "\n", vc->start_bit);
+    fprintf(out, "[ %lu\n", vc->start_bit);
     if (vc->cc.bc) {
       fprintf(out, "<!\n");
     } else {
@@ -347,11 +347,11 @@ recursive_dump(struct VirtualContainer * const vc, FILE * const out)
     for (uint64_t j = 0; j < vc->cc.count; j++) {
       if (vc->cc.metatables[j]) {
         const uint64_t mtid = vc->cc.metatables[j]->mtid;
-        fprintf(out, "%016" PRIx64 "\n", mtid);
+        fprintf(out, "%016lx\n", mtid);
       }
     }
     if (vc->cc.bc) {
-      fprintf(out, ">!%016" PRIx64 "\n", vc->cc.bc->mtid);
+      fprintf(out, ">!%016lx\n", vc->cc.bc->mtid);
     } else {
       fprintf(out, ">\n");
     }
@@ -480,7 +480,7 @@ db_dump_meta(struct DB * const db)
   assert(r_meta);
   // write mtid
   const uint64_t db_next_mtid = db->next_mtid;
-  fprintf(meta_out, "%" PRIu64 "\n", db_next_mtid);
+  fprintf(meta_out, "%lu\n", db_next_mtid);
   fclose(meta_out);
 
   // create symlink for newest meta
@@ -511,7 +511,7 @@ db_dump_meta(struct DB * const db)
 
   // done
   rwlock_reader_unlock(&(db->rwlock), ticket);
-  db_log_diff(db, sec0, "Dumping Metadata Finished (%06" PRIx64 ")", db_next_mtid);
+  db_log_diff(db, sec0, "Dumping Metadata Finished (%06lx)", db_next_mtid);
   fflush(db->log);
   return true;
 }
@@ -574,7 +574,7 @@ db_table_dump(struct DB * const db, struct Table * const table, const uint64_t s
   if (rr == false) {
     //char buffer[4096];
     //table_analysis_verbose(table, buffer);
-    db_log(db, "DUMP @%" PRIu64 " [%8" PRIx64 " FAILED!!]\n%s", start_bit/3, mtid, "");
+    db_log(db, "DUMP @%lu [%8lx FAILED!!]\n%s", start_bit/3, mtid, "");
     assert(false);
   }
 
@@ -595,7 +595,7 @@ db_table_dump(struct DB * const db, struct Table * const table, const uint64_t s
   db_generate_meta_fn(db, mtid, metafn);
   const bool rdm = table_dump_meta(table, metafn, off_main);
   assert(rdm);
-  db_log_diff(db, sec0, "DUMP @%" PRIu64 " [%8" PRIx64 " #%08" PRIx64 "] [%08"PRIu64"] %s",
+  db_log_diff(db, sec0, "DUMP @%lu [%8lx #%08lx] [%08lu] %s",
       start_bit/3, mtid, off_main/TABLE_ALIGN, nr_items, buffer);
   return mtid;
 }
@@ -686,7 +686,7 @@ compaction_feed_all(struct Compaction * const comp)
     comp->feed_token = 0;
     // parallel feed threads
     conc_fork_reduce(DB_FEED_NR, thread_compaction_feed, comp);
-    db_log_diff(comp->db, sec0, "FEED @%" PRIu64 " [%8" PRIx64 " #%08" PRIx64 "]",
+    db_log_diff(comp->db, sec0, "FEED @%lu [%8lx #%08lx]",
       comp->start_bit/3, comp->mts_old[i]->mtid, comp->mts_old[i]->mfh.off/TABLE_ALIGN);
   }
   // free feed arenas
@@ -748,7 +748,7 @@ compaction_update_bc(struct DB * const db, struct BloomContainer * const old_bc,
 
   const bool r = db_dump_bloomcontainer_meta(db, mtid_bc, new_bc);
   assert(r);
-  db_log_diff(db, sec0, "BC   *%1" PRIu64 " [%8" PRIx64 " #%08" PRIx64 "] {%4" PRIu32 "}",
+  db_log_diff(db, sec0, "BC   *%1lu [%8lx #%08lx] {%4u}",
       count, mtid_bc, off_bc/TABLE_ALIGN, new_bc->nr_index);
   return new_bc;
 }
@@ -854,7 +854,7 @@ compaction_main(struct DB * const db, struct VirtualContainer * const vc, const 
   // free old
   compaction_free_old(&comp);
   // log
-  db_log_diff(db, sec0, "COMP @%" PRIu64 " %2" PRIu64, vc->start_bit/3u, nr_feed);
+  db_log_diff(db, sec0, "COMP @%lu %2lu", vc->start_bit/3u, nr_feed);
   stat_inc(&(db->stat.nr_compaction));
 }
 
@@ -1203,7 +1203,7 @@ db_create(const char * const meta_dir, struct ContainerMapConf * const cm_conf)
   // pre make 256 sub-dirs
   char sub_dir[16];
   for (uint64_t i = 0; i < 256; i++) {
-    sprintf(sub_dir, "%02" PRIx64, i);
+    sprintf(sub_dir, "%02lx", i);
     if (false == db_touch_dir(meta_dir, sub_dir)) return NULL;
   }
 
@@ -1297,7 +1297,7 @@ db_spawn_threads(struct DB * const db)
     const int pc = pthread_create(&(db->t_compaction[n]), &attr, thread_compaction, (void *)db);
     assert(pc == 0);
     char th_name[128];
-    sprintf(th_name, "Compaction[%"PRIu64"]", n);
+    sprintf(th_name, "Compaction[%lu]", n);
     pthread_setname_np(db->t_compaction[n], th_name);
   }
 

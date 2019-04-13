@@ -18,7 +18,7 @@
   void
 rwlock_show(struct RWLock *bo)
 {
-  printf("****nxt %" PRIu64 " r %" PRIu64 " w %" PRIu64 " r0 %c %" PRIu64 " r1 %c %" PRIu64 "\n",
+  printf("****nxt %lu r %lu w %lu r0 %c %lu r1 %c %lu\n",
          bo->next_ticket, bo->reader_ticket, bo->writer_ticket,
          bo->rl[0].open?'+':'_', bo->rl[0].nr_readers,
          bo->rl[1].open?'+':'_', bo->rl[1].nr_readers);

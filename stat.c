@@ -56,44 +56,47 @@ stat_show(struct Stat * const stat, FILE * const out)
   const double write_amp = ((double)nr_write_all) / ((double)snapshot.nr_write[0]);
 
   fprintf(out, "====STAT====\n");
-  fprintf(out, "nr_get                 %10"PRIu64"\n", snapshot.nr_get);
-  fprintf(out, "nr_get_miss            %10"PRIu64"\n", snapshot.nr_get_miss);
+  if (snapshot.nr_get) {
+    fprintf(out, "nr_get                 %10lu\n", snapshot.nr_get);
+    fprintf(out, "nr_get_miss            %10lu\n", snapshot.nr_get_miss);
 
-  fprintf(out, "nr_get_at_hit[all,0:1] %10"PRIu64" %10"PRIu64" %10"PRIu64"\n",
-      nr_hit_at, snapshot.nr_get_at_hit[0], snapshot.nr_get_at_hit[1]);
-  fprintf(out, "nr_get_vc_hit[all,0:4] %10"PRIu64" %10"PRIu64" %10"PRIu64" %10"PRIu64" %10"PRIu64" %10"PRIu64"\n",
-      nr_hit_vc, snapshot.nr_get_vc_hit[0], snapshot.nr_get_vc_hit[3],
-      snapshot.nr_get_vc_hit[6], snapshot.nr_get_vc_hit[9], snapshot.nr_get_vc_hit[12]);
+    fprintf(out, "nr_get_at_hit[all,0:1] %10lu %10lu %10lu\n",
+        nr_hit_at, snapshot.nr_get_at_hit[0], snapshot.nr_get_at_hit[1]);
+    fprintf(out, "nr_get_vc_hit[all,0:4] %10lu %10lu %10lu %10lu %10lu %10lu\n",
+        nr_hit_vc, snapshot.nr_get_vc_hit[0], snapshot.nr_get_vc_hit[3],
+        snapshot.nr_get_vc_hit[6], snapshot.nr_get_vc_hit[9], snapshot.nr_get_vc_hit[12]);
 
-  fprintf(out, "nr_hit_all*            %10"PRIu64"\n", nr_hit_all);
-  fprintf(out, "nr_fetch_barrel        %10"PRIu64"\n", snapshot.nr_fetch_barrel);
-  fprintf(out, "nr_fetch_bc            %10"PRIu64"\n", snapshot.nr_fetch_bc);
-  fprintf(out, "nr_fetch_all*          %10"PRIu64"\n", nr_fetch_all);
+    fprintf(out, "nr_hit_all*            %10lu\n", nr_hit_all);
+    fprintf(out, "nr_fetch_barrel        %10lu\n", snapshot.nr_fetch_barrel);
+    fprintf(out, "nr_fetch_bc            %10lu\n", snapshot.nr_fetch_bc);
+    fprintf(out, "nr_fetch_all*          %10lu\n", nr_fetch_all);
 
-  fprintf(out, "nr_true_negative       %10"PRIu64"\n", snapshot.nr_true_negative);
-  fprintf(out, "nr_false_positive      %10"PRIu64"\n", snapshot.nr_false_positive);
-  fprintf(out, "nr_true_positive       %10"PRIu64"\n", snapshot.nr_true_positive);
-  fprintf(out, "false-post. rate*      %10.4lf%%\n", fprate);
-  fprintf(out, "all-fetch-efficiency*  %10.4lf%%\n", all_fetch_eff);
-  fprintf(out, "read_amplification*    %10.4lf\n", read_amp);
+    fprintf(out, "nr_true_negative       %10lu\n", snapshot.nr_true_negative);
+    fprintf(out, "nr_false_positive      %10lu\n", snapshot.nr_false_positive);
+    fprintf(out, "nr_true_positive       %10lu\n", snapshot.nr_true_positive);
+    fprintf(out, "false-post. rate*      %10.4lf%%\n", fprate);
+    fprintf(out, "all-fetch-efficiency*  %10.4lf%%\n", all_fetch_eff);
+    fprintf(out, "read_amplification*    %10.4lf\n", read_amp);
+  }
+  if (snapshot.nr_set) {
+    fprintf(out, "nr_set                 %10lu\n", snapshot.nr_set);
+    fprintf(out, "nr_set_retry           %10lu\n", snapshot.nr_set_retry);
+    fprintf(out, "nr_compaction          %10lu\n", snapshot.nr_compaction);
+    fprintf(out, "nr_active_dumped       %10lu\n", snapshot.nr_active_dumped);
+    fprintf(out, "all_dumped*            %10lu\n", all_dumped);
 
-  fprintf(out, "nr_set                 %10"PRIu64"\n", snapshot.nr_set);
-  fprintf(out, "nr_set_retry           %10"PRIu64"\n", snapshot.nr_set_retry);
-  fprintf(out, "nr_compaction          %10"PRIu64"\n", snapshot.nr_compaction);
-  fprintf(out, "nr_active_dumped       %10"PRIu64"\n", snapshot.nr_active_dumped);
-  fprintf(out, "all_dumped*            %10"PRIu64"\n", all_dumped);
-
-  fprintf(out, "nr_4K_write[table,0:4] %10"PRIu64" %10"PRIu64" %10"PRIu64" %10"PRIu64" %10"PRIu64" %10"PRIu64"\n",
-      nr_write_table, snapshot.nr_write[0], snapshot.nr_write[3],
-      snapshot.nr_write[6], snapshot.nr_write[9], snapshot.nr_write[12]);
-  fprintf(out, "nr_4K_write_bc         %10"PRIu64"\n", snapshot.nr_write_bc);
-  fprintf(out, "nr_4K_write_all*       %10"PRIu64"\n", nr_write_all);
-  fprintf(out, "write_amplification*   %10.4lf\n", write_amp);
+    fprintf(out, "nr_4K_write[table,0:4] %10lu %10lu %10lu %10lu %10lu %10lu\n",
+        nr_write_table, snapshot.nr_write[0], snapshot.nr_write[3],
+        snapshot.nr_write[6], snapshot.nr_write[9], snapshot.nr_write[12]);
+    fprintf(out, "nr_4K_write_bc         %10lu\n", snapshot.nr_write_bc);
+    fprintf(out, "nr_4K_write_all*       %10lu\n", nr_write_all);
+    fprintf(out, "write_amplification*   %10.4lf\n", write_amp);
+  }
 }
 
 #define STAT_COUNTER_CAP ((UINT64_C(100000)))
 #define STAT_COUNTER_NUSEC ((UINT64_C(1)))
-uint32_t*
+  uint32_t*
 latency_initial(void)
 {
   const uint64_t size = sizeof(uint32_t) * STAT_COUNTER_CAP;
@@ -126,7 +129,7 @@ latency_show(const char * const tag, uint32_t *const counters, FILE * const out)
   }
   if (sum == 0) return;
   fprintf(out, "====Latency Stat:%s\n", tag);
-  fprintf(out, "[x<L<x+%" PRIu64 "] %10s %10s\n", STAT_COUNTER_NUSEC, "[COUNT]", "[%]");
+  fprintf(out, "[x<L<x+%lu] %10s %10s\n", STAT_COUNTER_NUSEC, "[COUNT]", "[%]");
 
   // 1/1024
   const uint64_t c1 = sum >> 10;
@@ -150,12 +153,12 @@ latency_show(const char * const tag, uint32_t *const counters, FILE * const out)
 
     if (counters[i] > c1) {
       const double p = ((double)counters[i]) / d1;
-      fprintf(out, "%10" PRIu64 " %10u %10.3lf\n", i * STAT_COUNTER_NUSEC, counters[i], p);
+      fprintf(out, "%10lu %10u %10.3lf\n", i * STAT_COUNTER_NUSEC, counters[i], p);
     }
   }
-  fprintf(out, "%6s  %8" PRIu64 " us\n%6s  %8" PRIu64 " us\n%6s  %8" PRIu64 " us\n%6s  %8" PRIu64 " us\n",
-    "MAX", max * STAT_COUNTER_NUSEC, "95%", i95 * STAT_COUNTER_NUSEC,
-    "99%", i99 * STAT_COUNTER_NUSEC, "99.9%", i999 * STAT_COUNTER_NUSEC);
+  fprintf(out, "%6s  %8lu us\n%6s  %8lu us\n%6s  %8lu us\n%6s  %8lu us\n",
+      "MAX", max * STAT_COUNTER_NUSEC, "95%", i95 * STAT_COUNTER_NUSEC,
+      "99%", i99 * STAT_COUNTER_NUSEC, "99.9%", i999 * STAT_COUNTER_NUSEC);
 }
 
   void
@@ -190,7 +193,7 @@ latency_95_99_999(uint32_t * const counters, FILE * const out)
     if (count && (count >= p99) && (i99 == 0)) i99 = i;
     if (count && (count >= p999) && (i999 == 0)) i999 = i;
   }
-  fprintf(out, "%s %6" PRIu64 " %s %6" PRIu64 " %s %6" PRIu64 " %s %6" PRIu64 "\n",
-    "MAX", max * STAT_COUNTER_NUSEC, "95%", i95 * STAT_COUNTER_NUSEC,
-    "99%", i99 * STAT_COUNTER_NUSEC, "99.9%", i999 * STAT_COUNTER_NUSEC);
+  fprintf(out, "%s %6lu %s %6lu %s %6lu %s %6lu\n",
+      "MAX", max * STAT_COUNTER_NUSEC, "95%", i95 * STAT_COUNTER_NUSEC,
+      "99%", i99 * STAT_COUNTER_NUSEC, "99.9%", i999 * STAT_COUNTER_NUSEC);
 }

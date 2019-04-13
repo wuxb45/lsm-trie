@@ -71,15 +71,15 @@ static struct TestState __ts = {0,0,0,0,false,PTHREAD_MUTEX_INITIALIZER,NULL,NUL
 show_dbparams(const struct DBParams * const ps)
 {
   printf("MIX_TEST: %s\n", ps->tag);
-  printf("    -v #vlen:       %" PRIu64 "\n", ps->vlen);
+  printf("    -v #vlen:       %lu\n", ps->vlen);
   printf("    -d #dir:        %s\n",          ps->meta_dir);
   printf("    -c #cm_conf_fn: %s\n",          ps->cm_conf_fn);
-  printf("    -a #nr_threads: %" PRIu64 "\n", ps->nr_threads);
-  printf("    -w #p_writer:   %" PRIu64 "\n", ps->p_writer);
+  printf("    -a #nr_threads: %lu\n", ps->nr_threads);
+  printf("    -w #p_writer:   %lu\n", ps->p_writer);
   printf("    -g #generator:  %s\n",          ps->generator);
-  printf("    -r #range:      %" PRIu64 "\n", ps->range);
-  printf("    -t #sec:        %" PRIu64 "\n", ps->sec);
-  printf("    -n #nr_report:  %" PRIu64 "\n", ps->nr_report);
+  printf("    -r #range:      %lu\n", ps->range);
+  printf("    -t #sec:        %lu\n", ps->sec);
+  printf("    -n #nr_report:  %lu\n", ps->nr_report);
   fflush(stdout);
 }
 
@@ -135,7 +135,7 @@ mixed_worker(const struct DBParams * const ps)
         const double udiff = (usec - __ts.usec_last) / 1000000.0;
         const double elapsed = (usec - __ts.usec_start) / 1000000.0;
         const double qps = ((double)ps->nr_report) * 100.0 / udiff;
-        printf("@@%14" PRIu64 " %12lf   %12lf   %12.2lf\n", nr_100 * 100u, elapsed, udiff, qps);
+        printf("@@ ops %14lu time %12lf delta %12lf qps %12.2lf\n", nr_100 * 100u, elapsed, udiff, qps);
         __ts.usec_last = usec;
         db_stat_show(__ts.db, stdout);
         fflush(stdout);
@@ -265,8 +265,8 @@ mixed_test(const struct DBParams * const p)
   for (uint64_t i = 0; i < nth; i++) {
     pthread_join(pth[i], NULL);
   }
-  printf("Op %" PRIu64 "\n", __ts.nr_100 * 100u);
-  printf("time_usec %" PRIu64 "\n", dur);
+  printf("Op %lu\n", __ts.nr_100 * 100u);
+  printf("time_usec %lu\n", dur);
   printf("QPS %.4lf\n", ((double)__ts.nr_100) * 100000000.0 / ((double)dur));
   generator_destroy(__ts.gi);
   __ts.gi = NULL;
@@ -318,7 +318,7 @@ main(int argc, char ** argv)
       case 'h': { show_dbparams(&ps); exit(1); }
       case 'l': {
                   for (uint64_t i = 0; i < nr_configs; i++) {
-                    printf("====param %" PRIu64 "====\n", i);
+                    printf("====param %lu====\n", i);
                     show_dbparams(&(pstable[i]));
                   }
                   exit(1);

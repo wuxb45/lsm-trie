@@ -131,7 +131,7 @@ show_io(const char * const tag, const uint64_t io, const uint64_t dur, const siz
   const double bytes = unit_size * dio;
   const double mb = bytes / (1024.0 * 1024.0);
   const double th = mb / ddur;
-  printf("[%s] #th %" PRIu64 " #IO %" PRIu64 " Unit %.0lf IOPS %0.2lf Vo %6.0lfMiB Thr %.2lfMiB/s ",
+  printf("[%s] #th %lu #IO %lu Unit %.0lf IOPS %0.2lf Vo %6.0lfMiB Thr %.2lfMiB/s ",
       tag, nr_th, io, unit_size, dio / ddur, mb, th);
 }
 

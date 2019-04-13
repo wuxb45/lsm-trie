@@ -61,11 +61,11 @@ static struct TestState __ts;
 show_dbparams(const struct DBParams * const ps)
 {
   printf("Staged Read: %s\n", ps->tag);
-  printf("    -v #vlen:       %" PRIu64 "\n", ps->vlen);
+  printf("    -v #vlen:       %lu\n", ps->vlen);
   printf("    -d #meta_dir:   %s\n", ps->meta_dir);
   printf("    -c #cm_conf_fn: %s\n", ps->cm_conf_fn);
-  printf("    -a #nr_readers  %" PRIu64 "\n", ps->nr_readers);
-  printf("    -n #cycle(*100):%" PRIu64 "\n", ps->nr_cycle);
+  printf("    -a #nr_readers  %lu\n", ps->nr_readers);
+  printf("    -n #cycle(*100):%lu\n", ps->nr_cycle);
   fflush(stdout);
 }
 
@@ -107,7 +107,7 @@ do_read(const char * const tag, const uint64_t nr_readers, const uint64_t sec)
   __ts.nr_all = 0;
   conc_fork_reduce(nr_readers, read_th, NULL);
   // print
-  fprintf(stdout, "%s-QPS %"  PRIu64 "\n", tag, __ts.nr_all/sec);
+  fprintf(stdout, "%s-QPS %lu\n", tag, __ts.nr_all/sec);
   db_stat_show(__ts.db, stdout);
   latency_show(tag, __ts.latency, stdout);
   fflush(stdout);
@@ -249,7 +249,7 @@ main(int argc, char ** argv)
                 }
       case 'l': {
                   for (uint64_t i = 0; i < nr_configs; i++) {
-                    printf("====param %" PRIu64 "====\n", i);
+                    printf("====param %lu====\n", i);
                     show_dbparams(&(pstable[i]));
                   }
                   exit(1);

@@ -44,7 +44,7 @@ table_test(const uint64_t max_value_size)
   kv.pv = value;
   uint64_t count = 0;
   while (true) {
-    sprintf((char *)key, "%016" PRIx64, count);
+    sprintf((char *)key, "%016lx", count);
     kv.vlen = gi->next(gi);
     const bool ri = table_insert_kv_safe(table, &kv);
     if (ri == false) {
@@ -58,7 +58,7 @@ table_test(const uint64_t max_value_size)
   const double t1 = debug_time_sec();
   uint64_t found1 = 0;
   for (uint64_t i = 0; i < count; i++) {
-    sprintf((char *)key, "%016" PRIx64, i);
+    sprintf((char *)key, "%016lx", i);
     SHA1(key, 16, hash);
     struct KeyValue * const kv = table_lookup(table, 16, key, hash);
     if (kv) {
@@ -93,7 +93,7 @@ table_test(const uint64_t max_value_size)
   const double t5 = debug_time_sec();
   uint64_t found2 = 0;
   for (uint64_t i = 0; i < count; i++) {
-    sprintf((char *)key, "%016" PRIx64, i);
+    sprintf((char *)key, "%016lx", i);
     SHA1(key, 16, hash);
     struct KeyValue * const kv = metatable_lookup(mt, 16, key, hash);
     if (kv) {

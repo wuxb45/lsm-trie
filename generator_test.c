@@ -57,9 +57,9 @@ test_gen(struct GenInfo * gi, char * const tag, const uint64_t count)
     }
   }
 
-  printf("usec: %"PRIu64 " MIN: %" PRIu64 ", MAX: %" PRIu64 "\n", dt, r[0], r[count-1]);
+  printf("usec: %lu MIN: %lu, MAX: %lu\n", dt, r[0], r[count-1]);
   for (int i = 5; i < 100; i+=5) {
-    printf("|%d%%:%" PRIu64 "", i, r[count * i / 100]);
+    printf("|%d%%:%lu", i, r[count * i / 100]);
   }
   printf("\n");
 
@@ -67,7 +67,7 @@ test_gen(struct GenInfo * gi, char * const tag, const uint64_t count)
   for (uint64_t i = 0; i <= pid; i++) {
     if (pairs[i].b >= p1) {
       pcount++;
-      printf("@%" PRIu64 "[%" PRIu64 "]", pairs[i].a, pairs[i].b);
+      printf("@%lu[%lu]", pairs[i].a, pairs[i].b);
     }
   }
   printf("\n");
@@ -104,7 +104,7 @@ main(int argc, char ** argv)
   // test zipfian gen build time
   for (uint64_t i = 0x100000; i < 0x1000000; i<<=1) {
     struct timeval t0, t1;
-    printf("gen 0x%"PRIx64" zipfian .. ", i);
+    printf("gen 0x%lx zipfian .. ", i);
     gettimeofday(&t0, NULL);
     struct GenInfo * const gi = generator_new_zipfian(0, i);
     gettimeofday(&t1, NULL);

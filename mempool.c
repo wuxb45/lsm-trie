@@ -102,13 +102,13 @@ mempool_alloc(struct Mempool * const p, const size_t cap)
 {
   const size_t hcap = ((cap + 8u) & (~7u));
   if ((p == NULL) || ((p->pos + hcap) > p->max)) {
-    fprintf(stderr, "mempool_alloc() failed(1): pos: %" PRIu64 ", cap: %zu, max: %" PRIu64 "\n", p?p->pos:~0, cap, p?p->max:~0);
+    fprintf(stderr, "mempool_alloc() failed(1): pos: %lu, cap: %zu, max: %lu\n", p?p->pos:~0, cap, p?p->max:~0);
     fflush(stderr);
     return NULL;
   }
   const uint64_t pos = __sync_fetch_and_add(&(p->pos), hcap);
   if ((pos + hcap) > p->max) {
-    fprintf(stderr, "mempool_alloc() failed(2): pos: %" PRIu64 ", cap: %zu, max: %" PRIu64 "\n", p->pos, cap, p->max);
+    fprintf(stderr, "mempool_alloc() failed(2): pos: %lu, cap: %zu, max: %lu\n", p->pos, cap, p->max);
     fflush(stderr);
     return NULL;
   }
@@ -130,5 +130,5 @@ mempool_free(struct Mempool * const p)
   void
 mempool_show(struct Mempool * const p)
 {
-  fprintf(stdout, "mempool: pos: %" PRIu64 ", max: %" PRIu64 "\n", p->pos, p->max);
+  fprintf(stdout, "mempool: pos: %lu, max: %lu\n", p->pos, p->max);
 }

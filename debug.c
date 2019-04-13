@@ -50,7 +50,7 @@ debug_tv_diff(const struct timeval * const t0, const struct timeval * const t1)
   void
 debug_print_tv_diff(char * tag, const struct timeval t0, const struct timeval t1)
 {
-  printf("%s: %" PRIu64 " us\n", tag, debug_tv_diff(&t0, &t1));
+  printf("%s: %lu us\n", tag, debug_tv_diff(&t0, &t1));
 }
 
   void

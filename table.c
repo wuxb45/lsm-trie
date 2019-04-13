@@ -31,7 +31,7 @@
 #include "table.h"
 
 #define BARREL_CAP ((BARREL_ALIGN - sizeof(struct MetaIndex)))
-#define TABLE_VOLUME_PERCENT ((0.95))  // reduce this for large values
+#define TABLE_VOLUME_PERCENT ((0.75))  // reduce this for large values
 #define METAINDEX_PERCENT ((0.99))
 #define METAINDEX_MAX_NR ((UINT64_C(2048)))
 
@@ -427,7 +427,7 @@ barrel_dump_buffer(struct Barrel * const barrel, uint8_t * const buffer)
   static void
 barrel_show(struct Barrel * const barrel, FILE * const fo)
 {
-  fprintf(fo, "[%4"PRIu16" -> %4"PRIu16"] %5"PRIu16" %2"PRIu16" %08"PRIx32"\n",
+  fprintf(fo, "[%4hu -> %4hu] %5hu %2hu %08x\n",
       barrel->id, barrel->rid, barrel->volume, barrel->nr_out, barrel->min);
 }
 
@@ -906,13 +906,13 @@ table_analysis_verbose(struct Table * const table, FILE * const out)
 
   for (uint16_t i = 0; i <= x_moved_max; i++) {
     if (x_moved[i]) {
-      fprintf(out, "M[%2"PRIu16"] %4"PRIu32"\n", i, x_moved[i]);
+      fprintf(out, "M[%2hu] %4u\n", i, x_moved[i]);
     }
   }
-  fprintf(out, "volume %"PRIu64" capacity: %"PRIu64"\n", table->volume, table->capacity);
-  fprintf(out, "nr_mi %"PRIu64" nr_meta %"PRIu64"\n", table->nr_mi, nr_meta);
-  fprintf(out, "covered %"PRIu64" lost %"PRIu64"\n", x_covered_all, x_lost_all);
-  fprintf(out, "lookup %"PRIu64" items %"PRIu64" avg_read %.3lf\n", count_lookup, count_items, avg_read);
+  fprintf(out, "volume %lu capacity: %lu\n", table->volume, table->capacity);
+  fprintf(out, "nr_mi %lu nr_meta %lu\n", table->nr_mi, nr_meta);
+  fprintf(out, "covered %lu lost %lu\n", x_covered_all, x_lost_all);
+  fprintf(out, "lookup %lu items %lu avg_read %.3lf\n", count_lookup, count_items, avg_read);
 }
 
   void
@@ -925,7 +925,7 @@ table_analysis_short(struct Table * const table, char * const buffer)
   const double ik = ((double)(table->nr_mi * sizeof(table->mis[0])))/1024.0;
   const uint32_t bt_bytes = table->bt?table->bt->nr_bytes:0u;
   const double bk = table->bt?(((double)(table->bt->nr_bytes))/1024.0):0.0;
-  sprintf(buffer, "%8"PRIu64" (%5.2lf%%) %4"PRIu64" (%.1lfKB) %7"PRIu32" (%.1lfKB)",
+  sprintf(buffer, "%8lu (%5.2lf%%) %4lu (%.1lfKB) %7u (%.1lfKB)",
       table->volume, vp, table->nr_mi, ik, bt_bytes, bk);
 }
 

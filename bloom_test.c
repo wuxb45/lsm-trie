@@ -52,7 +52,7 @@ uncached_probe_test(void)
   gettimeofday(&t1, NULL);
   free(bf0);
   const uint64_t dt = debug_tv_diff(&t0, &t1);
-  printf("probe %" PRIu64 " times over 1GB, %" PRIu64" usec, %.2lf p/s\n",
+  printf("probe %lu times over 1GB, %luusec, %.2lf p/s\n",
       times, dt, ((double)times) * 1000000.0 / ((double)dt));
 }
 
@@ -104,7 +104,7 @@ false_positive_test(void)
       }
     }
     const double fprate = ((double)fp) / ((double)nr_probes);
-    printf("%" PRIu64 " out of %" PRIu64 ": %lf, ", fp, nr_probes, fprate);
+    printf("%lu out of %lu: %lf, ", fp, nr_probes, fprate);
     printf(" 8 %5.2lf  ", fprate *  8.0 * 100.0);
     printf("32 %5.2lf  ", fprate * 32.0 * 100.0);
     printf("40 %5.2lf  ", fprate * 40.0 * 100.0);
@@ -116,7 +116,7 @@ false_positive_test(void)
     probes += nr_probes;
   }
   const double fprateall = ((double)fps) / ((double)probes);
-  printf("%" PRIu64 " out of %" PRIu64 ": %lf, ", fps, probes, fprateall);
+  printf("%lu out of %lu: %lf, ", fps, probes, fprateall);
   printf(" 8: %5.2lf  ", fprateall *  8.0 * 100.0);
   printf("32: %5.2lf  ", fprateall * 32.0 * 100.0);
   printf("40: %5.2lf  ", fprateall * 40.0 * 100.0);
@@ -163,7 +163,7 @@ multi_level_false_positive_test(void)
       if (m) fp++;
     }
   }
-  printf("multi-level exist keys fp: %" PRIu64 " levels, %" PRIu64 " keys/level, %" PRIu64 " probes, %" PRIu64 " f-p, %.3lf%%\n",
+  printf("multi-level exist keys fp: %lu levels, %lu keys/level, %lu probes, %lu f-p, %.3lf%%\n",
       nr_levels, nr_keys, level * nr_keys, fp, ((double)fp) * 100.0 /((double)nr_keys));
   fp = 0;
   const uint64_t nr_nonprobe = 10000;
@@ -174,7 +174,7 @@ multi_level_false_positive_test(void)
       if (m) fp++;
     }
   }
-  printf("multi-level non-exist keys fp: %" PRIu64 " levels, %" PRIu64 " probes, %" PRIu64 " f-p, %.3lf%%\n",
+  printf("multi-level non-exist keys fp: %lu levels, %lu probes, %lu f-p, %.3lf%%\n",
       nr_levels, level * nr_nonprobe, fp, ((double)fp) * 100.0 /((double)nr_nonprobe));
 
   mempool_free(p);
@@ -226,7 +226,7 @@ containertest(void)
       if (n) match ++; else nomatch++;
     }
   }
-  printf("match %" PRIu64 ", nomatch %" PRIu64 " (m/n should < 1%%)\n", match, nomatch);
+  printf("match %lu, nomatch %lu (m/n should < 1%%)\n", match, nomatch);
   printf("build[0] ok\n");
 
   bcs[1] = bloomcontainer_update(bcs[0], bts[1], rawfd, 0, &stat);
@@ -246,7 +246,7 @@ containertest(void)
       if (m1 < 4) match01[m1]++;
     }
   }
-  printf("match1:%" PRIu64 ", 2:%" PRIu64 "\n", match01[1], match01[2]);
+  printf("match1:%lu, 2:%lu\n", match01[1], match01[2]);
 
   bcs[2] = bloomcontainer_update(bcs[1], bts[2], rawfd, 0, &stat);
   printf("update[2] ok\n");
@@ -281,7 +281,7 @@ containertest(void)
       }
     }
   }
-  printf("match count[0-7]:%" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " mismatch %" PRIu64 "\n",
+  printf("match count[0-7]:%lu %lu %lu %lu %lu %lu %lu %lu mismatch %lu\n",
       mc[0], mc[1], mc[2], mc[3], mc[4], mc[5], mc[6], mc[7], mismatch);
   printf("containertest: passed\n");
 }
