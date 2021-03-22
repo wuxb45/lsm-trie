@@ -1,6 +1,6 @@
 # Notes
 
-This LSM-trie implementation does not use any user-space cache. It's read performance is bottlenecked by I/O.
+This LSM-trie implementation does not use any user-space cache. Its read performance is bottlenecked by I/O.
 If you're looking for a high-performance SSD KV-store for fast write, read, and range search, take a look at [RemixDB](https://github.com/wuxb45/remixdb).
 
 # Build
